@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Site</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="reviewstyle.css">
+</head>
+<body class="default-theme">
+    <header>
+        <h1>Product Reviews</h1>
+        <p>Read what our customers think</p>
+    </header>
+
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <label for="languageSelector">Select Language:</label>
+        <select id="languageSelector">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+
+    <!-- Color Theme Selector -->
+    <div class="color-theme-selector">
+        <label for="colorTheme">Select Color Theme:</label>
+        <select id="colorTheme">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+        </select>
+    </div>
+
+    <!-- Review Sorting -->
+    <div class="review-sorting">
+        <label for="sortReviews">Sort Reviews By:</label>
+        <select id="sortReviews">
+            <option value="date">Date</option>
+            <option value="rating">Rating</option>
+        </select>
+    </div>
+
+    <!-- Review Form -->
+    <div class="form-container">
+        <h1 id="reviewFormTitle">Submit a Review</h1>
+        <form id="reviewForm">
+            <label for="reviewUserName">Name:</label>
+            <input type="text" id="reviewUserName" placeholder="Your name">
+
+            <label for="reviewTitleLabel">Product:</label>
+            <input type="text" id="reviewTitleLabel" placeholder="Product to review" required>
+
+            <label for="review">Review:</label>
+            <textarea id="review" placeholder="Your thoughts" rows="4" required></textarea>
+
+            <label for="rating">How likely are you to recommend this product to a friend?</label>
+            <fieldset class="star-rating">
+                <input type="radio" name="rating" value="5" id="star5" class="star">
+                <label for="star5" class="far fa-star"></label>
+                <input type="radio" name="rating" value="4" id="star4" class="star">
+                <label for="star4" class="far fa-star"></label>
+                <input type="radio" name="rating" value="3" id="star3" class="star">
+                <label for="star3" class="far fa-star"></label>
+                <input type="radio" name="rating" value="2" id="star2" class="star">
+                <label for="star2" class="far fa-star"></label>
+                <input type="radio" name="rating" value="1" id="star1" class="star">
+                <label for="star1" class="far fa-star"></label>
+            </fieldset>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Review Container -->
+    <h2 id="recentReviewsTitle">Recent Reviews</h2>
+    <div id="reviewsContainer">
+        <div class="review">
+            <div class="review-header">
+                <span class="review-user">John Doe</span> - <span class="review-date">November 5, 2024</span>
+            </div>
+            <h3>Amazing Product</h3>
+            <div class="review-rating">
+                <span>Rating: </span>
+                <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+            </div>
+            <p class="review-text">
+                This product is amazing! I loved the quality and the design. Highly recommend it to others.
+            </p>
+            <button class="helpful-btn">Helpful</button>
+            <span class="helpful-count">0</span> people found this helpful.
+        </div>
+        <div class="review">
+            <div class="review-header">
+                <span class="review-user">Bob Murray</span> - <span class="review-date">November 25, 2004</span>
+            </div>
+            <h3>Good Product</h3>
+            <div class="review-rating">
+                <span>Rating: </span>
+                <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+            </div>
+            <p class="review-text">
+                Good product, but could be improved in some areas. Overall, satisfied with the purchase.
+            </p>
+            <button class="helpful-btn">Helpful</button>
+            <span class="helpful-count">0</span> people found this helpful.
+        </div>
+    </div>
+
+    <!-- Privacy Policy and Contact -->
+    <p>
+        <a href="privacy-policy.html">Privacy Policy</a>
+    </p>
+    <p>
+        <button class="call-button"><a href="tel:7806678984">Contact</a></button>
+    </p>
+
+    <script src="reviewscript.js"></script>
+</body>
+</html>
