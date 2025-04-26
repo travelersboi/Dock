@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Load reviews from localStorage on page load
+  function loadReviews() {
+    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    reviews.forEach(review => createReview(review.userName, review.title, review.text, review.rating, review.date, review.helpfulCount));
+  }
+
+  // Save reviews to localStorage
+  function saveReviews(reviews) {
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+  }
+
   // Attach event listeners to helpful buttons
   function attachHelpfulButtonListeners() {
     const helpfulButtons = document.querySelectorAll('.helpful-btn');
@@ -8,12 +19,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Increase helpful count
+  // Increase helpful count and update localStorage
   function increaseCount(event) {
     const countSpan = event.target.nextElementSibling; // Assumes count follows button
     let currentCount = parseInt(countSpan.textContent) || 0;
     currentCount++;
     countSpan.textContent = currentCount;
+
+    // Update helpful count in localStorage
+    const reviewElement = event.target.closest('.review');
+    const reviewDate = reviewElement.querySelector('.review-date').textContent;
+    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    const reviewIndex = reviews.findIndex(review => review.date === reviewDate);
+    if (reviewIndex !== -1) {
+      reviews[reviewIndex].helpfulCount = currentCount;
+      saveReviews(reviews);
+    }
   }
 
   // Form submission
@@ -31,18 +52,30 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    createReview(reviewUserName, reviewTitle, reviewText, rating);
+    const date = new Date().toLocaleDateString();
+    const helpfulCount = 0;
+
+    // Create review in DOM
+    createReview(reviewUserName, reviewTitle, reviewText, rating, date, helpfulCount);
+
+    // Save to localStorage
+    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    reviews.push({ userName: reviewUserName, title: reviewTitle, text: reviewText, rating, date, helpfulCount });
+    saveReviews(reviews);
+
+    // Reset form
+    form.reset();
   });
 
-  // Create a new review
-  function createReview(userName, title, text, rating) {
+  // Create a review (with optional date and helpfulCount for loading from storage)
+  function createReview(userName, title, text, rating, date = new Date().toLocaleDateString(), helpfulCount = 0) {
     const review = document.createElement('div');
     review.classList.add('review');
 
     // Review header
     const reviewHeader = document.createElement('div');
     reviewHeader.classList.add('review-header');
-    reviewHeader.innerHTML = `<span class="review-user">${userName}</span> - <span class="review-date">${new Date().toLocaleDateString()}</span>`;
+    reviewHeader.innerHTML = `<span class="review-user">${userName}</span> - <span class="review-date">${date}</span>`;
 
     // Review title
     const reviewTitle = document.createElement('h3');
@@ -68,31 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
     helpfulButton.classList.add('helpful-btn');
     helpfulButton.textContent = texts[languageSelector.value].helpful;
 
-    const helpfulCount = document.createElement('span');
-    helpfulCount.classList.add('helpful-count');
-    helpfulCount.textContent = '0';
+    const helpfulCountSpan = document.createElement('span');
+    helpfulCountSpan.classList.add('helpful-count');
+    helpfulCountSpan.textContent = helpfulCount;
 
     const helpfulText = document.createElement('span');
     helpfulText.textContent = ' people found this helpful.';
 
     // Append elements
     review.appendChild(reviewHeader);
-    review.appendChild(reviewTitle); // Added title
+    review.appendChild(reviewTitle);
     review.appendChild(reviewRating);
     review.appendChild(reviewTextParagraph);
     review.appendChild(helpfulButton);
-    review.appendChild(helpfulCount);
+    review.appendChild(helpfulCountSpan);
     review.appendChild(helpfulText);
 
-    // Append to container (after the h2)
+    // Append to container
     const reviewsContainer = document.getElementById('reviewsContainer');
     reviewsContainer.appendChild(review);
 
     // Re-attach helpful button listeners
     attachHelpfulButtonListeners();
-
-    // Reset form
-    form.reset();
   }
 
   // Language selector
@@ -132,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('header h1').textContent = texts[lang].header;
     document.querySelector('header p').textContent = texts[lang].subheader;
     document.getElementById('reviewFormTitle').textContent = texts[lang].submitReview;
-    document.querySelector('#reviewsContainer h2').textContent = texts[lang].recentReviews;
+    document.getElementById('recentReviewsTitle').textContent = texts[lang].recentReviews;
     document.querySelectorAll('.helpful-btn').forEach(button => {
       button.textContent = texts[lang].helpful;
     });
@@ -172,13 +202,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return 0;
     });
 
-    // Reorder reviews, preserving the h2
-    const h2 = reviewsContainer.querySelector('h2');
+    // Reorder reviews
     reviewsContainer.innerHTML = '';
-    reviewsContainer.appendChild(h2);
     reviews.forEach(review => reviewsContainer.appendChild(review));
   }
 
-  // Initialize
+  // Initialize: Load reviews and attach listeners
+  loadReviews();
   attachHelpfulButtonListeners();
 });
